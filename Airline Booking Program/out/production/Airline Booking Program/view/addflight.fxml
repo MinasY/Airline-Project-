@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.control.DatePicker?>
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddFlight">
+    <children>
+        <TextField fx:id="seats" layoutX="80.0" layoutY="316.0" prefHeight="25.0" prefWidth="212.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" />
+        <TextField fx:id="flightid" layoutX="80.0" layoutY="232.0" prefHeight="25.0" prefWidth="212.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" />
+        <Label layoutX="81.0" layoutY="299.0" text="availablr seats" AnchorPane.leftAnchor="81.0" />
+        <Label layoutX="81.0" layoutY="215.0" text="Flight id" AnchorPane.leftAnchor="81.0" />
+        <TextField fx:id="price" layoutX="80.0" layoutY="274.0" prefHeight="25.0" prefWidth="212.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" />
+        <Label layoutX="81.0" layoutY="257.0" text="price" AnchorPane.leftAnchor="81.0" />
+        <ComboBox fx:id="departingCity" layoutX="80.0" layoutY="59.0" prefHeight="25.0" prefWidth="212.0" promptText="select city" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" />
+        <ComboBox fx:id="arrivalcity" layoutX="80.0" layoutY="101.0" prefHeight="25.0" prefWidth="212.0" promptText="select city" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" />
+        <Label layoutX="81.0" layoutY="42.0" text="Departing city" AnchorPane.leftAnchor="81.0" />
+        <Label layoutX="81.0" layoutY="84.0" text="Arrival city" AnchorPane.leftAnchor="81.0" />
+        <ComboBox fx:id="departingtime" layoutX="80.0" layoutY="190.0" prefHeight="25.0" prefWidth="212.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0">
+        </ComboBox>
+        <Label layoutX="81.0" layoutY="173.0" text="Departing time" AnchorPane.leftAnchor="81.0" />
+        <Button layoutX="238.0" layoutY="443.0" mnemonicParsing="false" onAction="#addFlight" prefHeight="25.0" prefWidth="124.0" text="SAVE" AnchorPane.rightAnchor="238.0" />
+      <DatePicker fx:id="departingdate" layoutX="80.0" layoutY="143.0" prefHeight="25.0" prefWidth="440.0" />
+      <Label layoutX="81.0" layoutY="126.0" text="Departing date" />
+      <TextField fx:id="newcity" layoutX="80.0" layoutY="14.0" prefHeight="25.0" prefWidth="290.0" promptText="New city name" />
+      <Button layoutX="396.0"  layoutY="14.0" mnemonicParsing="false" onAction="#addcity" prefHeight="25.0" prefWidth="124.0" text="Add city" />
+    </children>
+</AnchorPane>
