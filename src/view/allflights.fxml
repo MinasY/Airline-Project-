@@ -11,7 +11,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AllFlights">
    <children>
       <Button layoutX="14.0" layoutY="361.0" mnemonicParsing="false" onAction="#addfligt" text="Add" AnchorPane.bottomAnchor="14.0" />
-      <Button layoutX="68.0" layoutY="361.0" mnemonicParsing="false" onAction="#updatw" text="Update" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="68.0" />
+      <Button layoutX="68.0" layoutY="361.0" mnemonicParsing="false" onAction="#update" text="Update" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="68.0" />
       <Button layoutX="141.0" layoutY="361.0" mnemonicParsing="false" onAction="#delete" text="delete" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="141.0" />
       <Button layoutX="534.0" layoutY="361.0" mnemonicParsing="false" onAction="#close" text="Exit" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="31.0" />
       <TableView fx:id="table" layoutX="13.0" layoutY="88.0" prefHeight="266.0" prefWidth="578.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="88.0">

@@ -1,5 +1,6 @@
 package controller;
 
+import interfaces.onFlightsChange;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,7 +24,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
-public class AllFlights implements Initializable {
+public class AllFlights extends BaseController {
     @FXML
     public TableColumn id;
     @FXML
@@ -42,72 +43,8 @@ public class AllFlights implements Initializable {
     public TextField search;
     @FXML
     private TableView<Flight> table;
-    private DBHandler dbHandler=DBHandler.getInstance();
+    private
     Flight current;
-    private ObservableList<City> cities;
-
-    public ObservableList<Flight> getFlightsList(){
-        ObservableList<Flight> FlightList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM flights ";
-        ResultSet rs;
-        try {
-            rs = dbHandler.executeSelect(query);
-            Flight Flight;
-            while(rs.next()) {
-                Flight = new Flight(rs.getInt("id"),
-                        rs.getInt("departurecity")
-                        ,rs.getInt("arrivalcity")
-                        ,rs.getString("departuredate")
-                        ,rs.getString("departuretime")
-                        ,rs.getString("price")
-                        ,rs.getString("seats"));
-                FlightList.add(Flight);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return FlightList;
-    }
-    public ObservableList<Flight> getFlightsList(int id){
-        ObservableList<Flight> FlightList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM flights ";
-        ResultSet rs;
-        try {
-            rs = dbHandler.executeSelect(query);
-            Flight Flight;
-            while(rs.next()) {
-                Flight = new Flight(rs.getInt("id"),
-                        rs.getInt("departurecity")
-                        ,rs.getInt("arrivalcity")
-                        ,rs.getString("departuredate")
-                        ,rs.getString("departuretime")
-                        ,rs.getString("price")
-                        ,rs.getString("seats"));
-                if(Flight.getFlightId()==id||-1==id)
-                FlightList.add(Flight);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return FlightList;
-    }
-    public ObservableList<City> getCities(){
-        ObservableList<City> citiesList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM citties ";
-        ResultSet rs;
-        try {
-            rs = dbHandler.executeSelect(query);
-            City city;
-            while(rs.next()) {
-                city = new City(rs.getInt("id"),
-                        rs.getString("city"));
-                citiesList.add(city);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return citiesList;
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -118,7 +55,6 @@ public class AllFlights implements Initializable {
                                 String newValue) {
 
                 try {
-
                     if(newValue.length()==0)
                         table.setItems(getFlightsList());
                     else
@@ -290,18 +226,10 @@ public class AllFlights implements Initializable {
             }
         });
     }
-
-    private String getCityName(int arrivingCityId) {
-        for (City c:cities)
-            if(c.getId()==arrivingCityId)
-                return c.getName();
-        return "";
-    }
-
     public void delete(ActionEvent actionEvent) {
 
         try {
-            if(Login.userLogin!=null&&Login.userLogin.getType()==0)
+            if(Login.userLogin!=null&&Login.userLogin.canDelete())
             {
                 final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
                 alert33.setTitle("Permission Error");
@@ -321,6 +249,7 @@ public class AllFlights implements Initializable {
             String q="delete from flighs where id ='"+current.getFlightId()+"'";
         dbHandler.executeQuery(q);
         table.setItems(getFlightsList());
+        table.refresh();
         }
         catch (Exception e){
             final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
@@ -336,7 +265,7 @@ public class AllFlights implements Initializable {
         try {
 
             try {
-                if(Login.userLogin!=null&&Login.userLogin.getType()==0)
+                if(Login.userLogin!=null&&Login.userLogin.canAdd())
                 {
                     final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
                     alert33.setTitle("Permission Error");
@@ -360,7 +289,7 @@ public class AllFlights implements Initializable {
         }
         catch (Exception e){
             final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
-            alert33.setTitle("Exceptio");
+            alert33.setTitle("Exception");
             alert33.setContentText(e.getMessage());
             alert33.setHeaderText(e.getMessage());
             alert33.showAndWait();
@@ -368,9 +297,9 @@ public class AllFlights implements Initializable {
         }
     }
 
-    public void updatw(ActionEvent actionEvent) {
+    public void update(ActionEvent actionEvent) {
         try {
-            if(Login.userLogin!=null&&Login.userLogin.getType()==0)
+            if(Login.userLogin!=null&&Login.userLogin.canEdit())
             {
                 final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
                 alert33.setTitle("Permission Error");
@@ -396,7 +325,15 @@ public class AllFlights implements Initializable {
             AddFlight controller =
                     loader.getController();
             controller.setFlight(current);
-            stage.setTitle("Forget Password");
+            controller.setOnFlightsChanged(new onFlightsChange() {
+                @Override
+                public void onFlightsChange() {
+                    getCities();
+                    table.setItems(getFlightsList());
+                    table.refresh();
+                }
+            });
+            stage.setTitle("Update Flight");
             stage.setScene(new Scene(root, 600, 400));
             stage.setResizable(false);
             stage.show();
@@ -404,7 +341,7 @@ public class AllFlights implements Initializable {
 
         catch (Exception e){
             final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
-            alert33.setTitle("Exceptio");
+            alert33.setTitle("Exception");
             alert33.setContentText(e.getMessage());
             alert33.setHeaderText(e.getMessage());
             alert33.showAndWait();

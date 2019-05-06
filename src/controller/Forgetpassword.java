@@ -2,22 +2,17 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import utils.DBHandler;
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
-public class Forgetpassword implements Initializable {
-    private DBHandler dbHandler=DBHandler.getInstance();
+public class Forgetpassword extends BaseController{
+    private
 
     @FXML
     TextField username;
@@ -28,13 +23,18 @@ public class Forgetpassword implements Initializable {
 
     }
 
+    /**
+     * close the forget password window
+     * **/
     public void close(ActionEvent actionEvent) {
 
         Node source = (Node)  actionEvent.getSource();
         Stage stage  = (Stage) source.getScene().getWindow();
         stage.close();
     }
-
+    /**
+     * find security question for user
+     * **/
     public void find(ActionEvent actionEvent) {
         String username = this.username.getText();
         if (username == null || "".equals(username)) {
@@ -60,7 +60,6 @@ public class Forgetpassword implements Initializable {
             }
             if (rs.next()) {
                 String securityQuestion=rs.getString("securityQuestion");
-
                 final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
                 alert33.setTitle("Security question");
                 alert33.setContentText(securityQuestion);
@@ -80,6 +79,9 @@ public class Forgetpassword implements Initializable {
 
         }
     }
+    /**
+     * find user password if username and answer match
+     * **/
     public void getPassword(ActionEvent actionEvent) {
         String username = this.username.getText();
         String answer = this.answer.getText();

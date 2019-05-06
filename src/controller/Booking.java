@@ -22,9 +22,7 @@ import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-public class Booking implements Initializable {
-
-
+public class Booking extends BaseController {
     @FXML
     public TableColumn id;
     @FXML
@@ -52,82 +50,9 @@ public class Booking implements Initializable {
     public Button filter;
     @FXML
     private TableView<Flight> table;
-
-    private DBHandler dbHandler=DBHandler.getInstance();
-    public ObservableList<City> getCities(){
-        ObservableList<City> citiesList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM citties ";
-        ResultSet rs;
-        try {
-            rs = dbHandler.executeSelect(query);
-            City city;
-            while(rs.next()) {
-                city = new City(rs.getInt("id"),
-                        rs.getString("city"));
-                citiesList.add(city);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return citiesList;
-    }
     Flight currentFlight;
     Book currentBook;
-    public ObservableList<Flight> getFlightsList(){
-        ObservableList<Flight> FlightList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM flights ";
-        ResultSet rs;
-        try {
-            rs = dbHandler.executeSelect(query);
-            Flight Flight;
-            while(rs.next()) {
-                Flight = new Flight(rs.getInt("id"),
-                        rs.getInt("departurecity")
-                        ,rs.getInt("arrivalcity")
-                        ,rs.getString("departuredate")
-                        ,rs.getString("departuretime")
-                        ,rs.getString("price")
-                        ,rs.getString("seats"));
-                FlightList.add(Flight);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return FlightList;
-    }
-    public ObservableList<Flight> getFlightsList(int id){
-        ObservableList<Flight> FlightList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM flights ";
-        ResultSet rs;
-        try {
-            rs = dbHandler.executeSelect(query);
-            Flight Flight;
-            while(rs.next()) {
-                Flight = new Flight(rs.getInt("id"),
-                        rs.getInt("departurecity")
-                        ,rs.getInt("arrivalcity")
-                        ,rs.getString("departuredate")
-                        ,rs.getString("departuretime")
-                        ,rs.getString("price")
-                        ,rs.getString("seats"));
-                if(Flight.getFlightId()==id||-1==id)
-                    FlightList.add(Flight);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return FlightList;
-    }
     private ObservableList<City> cities;
-
-    private String getCityName(int arrivingCityId) {
-        for (City c:cities)
-            if(c.getId()==arrivingCityId)
-                return c.getName();
-        return "";
-    }
-
-
     public void close(ActionEvent actionEvent) {
 
         Node source = (Node)  actionEvent.getSource();
@@ -414,9 +339,11 @@ public class Booking implements Initializable {
         dbHandler.executeQuery(q);
         showBooking();
     }
-
-
+    /**
+     * book flight
+     * **/
     public void book(ActionEvent actionEvent) {
+        //chck if user selected flight in taable
         if(currentFlight==null){
             final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
             alert33.setTitle("No flight is selected");
@@ -426,6 +353,7 @@ public class Booking implements Initializable {
             return;
         }
         try {
+            //check if user didn't book the flight before
             String query="select * from books where flightid='"+currentFlight.getFlightId()
                     +"' and "+" userid="+"'"+Login.userLogin.getId()+"'";;
             ResultSet rs;
@@ -444,6 +372,7 @@ public class Booking implements Initializable {
         }
 
         try {
+            //check if the flight still have available seats and not full
             String query="select * from books where flightid='"+currentFlight.getFlightId()+"'";
             ResultSet rs;
             rs = dbHandler.executeSelect(query);
@@ -460,6 +389,7 @@ public class Booking implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //book flight
         try {
             String query="INSERT INTO books (userid, flightid) VALUES ('"+
                     Login.userLogin.getId()+"', '"+currentFlight.getFlightId()+"');";
@@ -471,7 +401,13 @@ public class Booking implements Initializable {
         }
     }
 
+    /**
+     * hold the state of filter button
+     **/
     public  boolean isFiter;
+    /**
+     *filter  flights based on city and date
+     **/
     public void filter(ActionEvent actionEvent) {
 
         if (isFiter) {

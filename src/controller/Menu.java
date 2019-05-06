@@ -14,12 +14,22 @@ import javafx.stage.Stage;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 public class Menu {
+
+    /**
+     * close the program
+     **/
     public void exit(ActionEvent actionEvent) {
         System.exit(0);
     }
+
+    /**
+     * show login screen
+     **/
     public void logout(ActionEvent actionEvent) {
         Parent root;
         try {
+            //remove old user info
+            Login.userLogin=null;
             root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Login");
@@ -32,6 +42,9 @@ public class Menu {
             System.out.println(e.getMessage());
         }
     }
+    /**
+     * show all flights screen
+     **/
     public void all(ActionEvent actionEvent) {
         try {
             Parent root =  FXMLLoader.load(getClass().getResource("/view/allflights.fxml"));
@@ -47,6 +60,10 @@ public class Menu {
             System.out.println(e.getMessage());
         }
     }
+
+    /**
+     * show booking flights screen
+     **/
     public void book(ActionEvent actionEvent) {
         try {
             Parent root =  FXMLLoader.load(getClass().getResource("/view/booking.fxml"));

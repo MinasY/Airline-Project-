@@ -11,7 +11,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
-public class Register implements Initializable {
+public class Register extends BaseController {
     @FXML
     TextField first;
     @FXML
@@ -34,16 +34,10 @@ public class Register implements Initializable {
     TextField question;
     @FXML
     TextField answer;
-    private DBHandler dbHandler = DBHandler.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
-
-    public boolean isEmpty(TextField f) {
-        return f.getText() == null || "".equals(f.getText());
-    }
-
     public void register(ActionEvent actionEvent) {
         if (isEmpty(username)) {
             final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
@@ -129,6 +123,7 @@ public class Register implements Initializable {
         ResultSet rs;
 
         try {
+            //check if username is not taken by another user
             rs = dbHandler.executeSelect(select);
             if (rs == null) {
                 final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);

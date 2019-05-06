@@ -22,7 +22,7 @@
         <ComboBox fx:id="departingtime" layoutX="80.0" layoutY="190.0" prefHeight="25.0" prefWidth="212.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0">
         </ComboBox>
         <Label layoutX="81.0" layoutY="173.0" text="Departing time" AnchorPane.leftAnchor="81.0" />
-        <Button layoutX="238.0" layoutY="443.0" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="124.0" text="SAVE" AnchorPane.rightAnchor="238.0" />
+        <Button layoutX="238.0" layoutY="443.0" mnemonicParsing="false" onAction="#addFlight" prefHeight="25.0" prefWidth="124.0" text="SAVE" AnchorPane.rightAnchor="238.0" />
       <DatePicker fx:id="departingdate" layoutX="80.0" layoutY="143.0" prefHeight="25.0" prefWidth="440.0" />
       <Label layoutX="81.0" layoutY="126.0" text="Departing date" />
       <TextField fx:id="newcity" layoutX="80.0" layoutY="14.0" prefHeight="25.0" prefWidth="290.0" promptText="New city name" />

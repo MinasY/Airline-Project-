@@ -1,6 +1,8 @@
 package model;
 
-public class User {
+import interfaces.Permissions;
+
+public class User implements Permissions {
     int id;
     String userName;
     String password;
@@ -117,5 +119,20 @@ public class User {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    @Override
+    public boolean canAdd() {
+        return type==1;
+    }
+
+    @Override
+    public boolean canEdit() {
+        return type==1;
+    }
+
+    @Override
+    public boolean canDelete() {
+        return type==1;
     }
 }

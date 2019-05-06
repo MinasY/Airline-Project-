@@ -7,6 +7,9 @@ import java.sql.Statement;
 
 import static application.Welcome.*;
 
+/**
+ * Database manager for creating connection and executing queries
+ * **/
 public class DBHandler {
     private static DBHandler dbHandler;
     public static DBHandler getInstance() {
@@ -14,22 +17,10 @@ public class DBHandler {
             dbHandler=new DBHandler();
         return dbHandler;
     }
-    public static String createUsersTable=
-            "   CREATE TABLE `users` (" +
-            "  `id` int(11) NOT NULL AUTO_INCREMENT," +
-            "  `userName` varchar(55) NOT NULL unique," +
-            "  `password` varchar(55) NOT NULL," +
-            "  `securityQuestion`  TEXT NOT NULL," +
-            "  `securityanswer`  TEXT NOT NULL," +
-            "  `firstName` varchar(55) NOT NULL," +
-            "  `lastName` varchar(55) NOT NULL," +
-            "  `address` varchar(55) NOT NULL," +
-            "  `state`varchar(55) NOT NULL," +
-            "  `email` varchar(55) NOT NULL," +
-            "  `zip` varchar(55) NOT NULL," +
-            "  `ssn` varchar(55) NOT NULL," +
-            "  PRIMARY KEY (`id`)" +
-            ")";
+    /**
+     * create database connecton
+     * @return database connection object
+     * **/
     public Connection getConnection() {
         Connection conn;
         try {
@@ -40,7 +31,11 @@ public class DBHandler {
             return null;
         }
     }
-
+/**
+ * Executes the given SQL statement, which may be an <code>INSERT</code>,
+ * <code>UPDATE</code>, or <code>DELETE</code> statement or an
+ * SQL statement that returns nothing, such as an SQL DDL statement.
+ * **/
     public void executeQuery(String query) {
         Connection conn = getConnection();
         Statement st;
@@ -51,7 +46,15 @@ public class DBHandler {
             e.printStackTrace();
         }
     }
-
+/**
+ * Executes the given SQL statement, which returns a single
+ * <code>ResultSet</code> object.
+ *<p>
+ * @param query an SQL statement to be sent to the database, typically a
+ *        static SQL <code>SELECT</code> statement
+ * @return a <code>ResultSet</code> object that contains the data produced
+ *         by the given query; never <code>null</code>
+ **/
     public ResultSet executeSelect(String query) {
         Connection conn = getConnection();
         Statement st;

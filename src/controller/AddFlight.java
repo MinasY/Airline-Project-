@@ -1,5 +1,6 @@
 package controller;
 
+import interfaces.onFlightsChange;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
-public class AddFlight implements Initializable {
+public class AddFlight extends BaseController {
     @FXML
     public TextField seats;
     @FXML
@@ -35,10 +36,11 @@ public class AddFlight implements Initializable {
     public ComboBox<City> departingCity;
     @FXML
     public TextField newcity;
-    private DBHandler dbHandler = DBHandler.getInstance();
     private Flight current;
     private ObservableList<City> cities;
     ObservableList<String>times=  FXCollections.observableArrayList();
+    private onFlightsChange onFlightsChanged;
+
     public ObservableList<City> getCities(){
         ObservableList<City> citiesList = FXCollections.observableArrayList();
         String query = "SELECT * FROM citties ";
@@ -56,7 +58,6 @@ public class AddFlight implements Initializable {
         }
         return citiesList;
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cities=getCities();
@@ -67,6 +68,7 @@ public class AddFlight implements Initializable {
             departingCity.setValue(cities.get(0));
             arrivalcity.setValue(cities.get(0));
         }
+        //add time combobox
         for(int i=0;i<10;i++)
             times.add("0"+i+":00");
         for(int i=10;i<23;i++)
@@ -74,12 +76,10 @@ public class AddFlight implements Initializable {
         departingtime.setItems(times);
         departingtime.setValue(times.get(0));
     }
-
-    public boolean isEmpty(TextField f) {
-        return f.getText() == null || "".equals(f.getText());
-    }
-
-    public void register(ActionEvent actionEvent) {
+    /**
+     * add new flight with error code for invalid fields
+     * **/
+    public void addFlight(ActionEvent actionEvent) {
         if (isEmpty(flightid)) {
             final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
             alert33.setTitle("flight id missed");
@@ -105,6 +105,7 @@ public class AddFlight implements Initializable {
             return;
         }
         if(current!=null){
+            try {
             String  q="UPDATE 'mydb'.'flights' SET " +
                     " 'departurecity' = '"+departingCity.getValue().getId() +"', " +
                     "'arrivalcity' = '"+ arrivalcity.getValue().getId()+"'," +
@@ -112,8 +113,14 @@ public class AddFlight implements Initializable {
                     " 'departuretime' = '"+ departingtime.getValue()+"'," +
                     " 'price' = '"+price.getText()+"', 'seats' = '"+ seats.getText()+"' " +
                     "WHERE ('id' = '"+ flightid.getText()+"')";
-
+            dbHandler.executeQuery(q);
+            if(onFlightsChanged!=null)
+                onFlightsChanged.onFlightsChange();
             return;
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
         String select = "SELECT * FROM flights where  id='" + flightid.getText() + "'";
         ResultSet rs;
@@ -154,6 +161,8 @@ public class AddFlight implements Initializable {
                         "');";
                 System.out.println(query);
                 dbHandler.executeQuery(query);
+                if(onFlightsChanged!=null)
+                    onFlightsChanged.onFlightsChange();
             }
         } catch (Exception e) {
             final Alert alert33 = new Alert(Alert.AlertType.ERROR);
@@ -163,7 +172,9 @@ public class AddFlight implements Initializable {
             alert33.showAndWait();
         }
     }
-
+    /**
+     * add new city
+     * **/
     public void addcity(ActionEvent actionEvent) {
         if(isEmpty(newcity)){
         final Alert alert33 = new Alert(Alert.AlertType.INFORMATION);
@@ -179,11 +190,19 @@ public class AddFlight implements Initializable {
         arrivalcity.setItems(getCities());
 
     }
-    public static final LocalDate LOCAL_DATE (String dateString){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate localDate = LocalDate.parse(dateString, formatter);
-        return localDate;
+    /**
+     * set onflight add or update listener
+     *
+     * @param onFlightsChanged listener to notify when add or update occur
+     * **/
+    public void setOnFlightsChanged(onFlightsChange onFlightsChanged){
+        if(onFlightsChanged!=null)
+            this.onFlightsChanged=onFlightsChanged;
     }
+    /**
+     * set fields values to flight
+     * @param current flight to update
+     **/
     public void setFlight(Flight current) {
         this.current=current;
         cities=getCities();
